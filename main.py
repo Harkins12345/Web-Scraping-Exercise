@@ -16,42 +16,42 @@ def main():
 
             soup = BeautifulSoup(page_html, 'html.parser')
 
-            links = soup.find_all('h3', {'class': 'file-name myhome'})
-            next_button = soup.find('a', {'title': 'Next'})
+            while True:
 
-            while next_button:
-
-                next_button = soup.find('a', {'title': 'Next'})
+                links = soup.find_all('h3', {'class': 'file-name myhome'})
 
                 for link_element in links:
-                    a_tag = link_element.find('a')
+                        a_tag = link_element.find('a')
 
-                    url = a_tag['href']
-                    song_title = a_tag.string
-
-
-                    song_page_resp = r.get(url)
-
-                    song_page_html = song_page_resp.text
-
-                    song_page_soup = BeautifulSoup(song_page_html, 'html.parser')
-
-                    download_button = song_page_soup.find('p', {'class': 'song-download'})
-                    if download_button:
-                        download_url = download_button.find('a')['href']
-                    else:
-                        download_url = None
-
-                    date_div = song_page_soup.find('div', {'class': 'Adxdetails'})
-                    date_element = date_div.find('time')
-
-                    if date_element:
-                        date_posted = date_element['datetime']
-                    else:
-                        date_posted = None
+                        url = a_tag['href']
+                        song_title = a_tag.string
 
 
-                    writer.writerow([song_title, url, download_url, date_posted])
+                        song_page_resp = r.get(url)
+
+                        song_page_html = song_page_resp.text
+
+                        song_page_soup = BeautifulSoup(song_page_html, 'html.parser')
+
+                        download_button = song_page_soup.find('p', {'class': 'song-download'})
+                        if download_button:
+                            download_url = download_button.find('a')['href']
+                        else:
+                            download_url = None
+
+                        date_div = song_page_soup.find('div', {'class': 'Adxdetails'})
+                        date_element = date_div.find('time')
+
+                        if date_element:
+                            date_posted = date_element['datetime']
+                        else:
+                            date_posted = None
+
+
+                        writer.writerow([song_title, url, download_url, date_posted])
+
+
+                next_button = soup.find('a', {'title': 'Next'})
 
                 if next_button:
                     next_page_url = next_button['href']
@@ -60,7 +60,7 @@ def main():
 
                     soup = BeautifulSoup(page_html, 'html.parser')
                     links = soup.find_all('h3', {'class': 'file-name myhome'})
-                
+                        
                 else:
                     break
 
